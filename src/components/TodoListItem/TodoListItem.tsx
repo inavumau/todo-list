@@ -4,7 +4,13 @@ import { Card, List } from 'antd';
 
 const TodoListItem = ({ itemData }: Props) => (
     <List.Item>
-        <Card title={itemData.date}>{itemData.content}</Card>
+        <Card
+            className="card-content"
+            bodyStyle={{ maxHeight: '200px', overflowY: 'auto' }}
+            title={itemData.date}
+        >
+            {itemData.content}
+        </Card>
     </List.Item>
 );
 
