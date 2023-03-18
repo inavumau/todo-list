@@ -5,3 +5,8 @@
 .app-content {
     padding: 25px 50px;
 }
+
+.app-content-add-button {
+    height: 50px;
+    width: 50px;
+}
