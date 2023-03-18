@@ -1,26 +1,30 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import { Layout } from 'antd';
+import { v4 as uuidv4 } from 'uuid';
+import moment from 'moment';
+import { Content } from 'antd/es/layout/layout';
+import TodoList from './components/TodoList/TodoList';
 
-function App() {
-    return (
-        <div className="App">
-            <header className="App-header">
-                <img src={logo} className="App-logo" alt="logo" />
-                <p>
-                    Edit <code>src/App.tsx</code> and save to reload.
-                </p>
-                <a
-                    className="App-link"
-                    href="https://reactjs.org"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                >
-                    Learn React
-                </a>
-            </header>
-        </div>
-    );
-}
+const TodoData = [
+    {
+        id: uuidv4(),
+        content: 'test content',
+        date: moment().format('MMMM Do YYYY, hh:mm:ss')
+    },
+    {
+        id: uuidv4(),
+        content: 'test content2',
+        date: moment().format('MMMM Do YYYY, hh:mm:ss')
+    }
+];
+
+const App = () => (
+    <Layout className="app">
+        <Content className="app-content">
+            <TodoList data={TodoData} />
+        </Content>
+    </Layout>
+);
 
 export default App;
