@@ -1,77 +1,53 @@
 import React, { useState } from 'react';
 import './App.css';
 import { FloatButton, Layout } from 'antd';
-import { v4 as uuidv4 } from 'uuid';
-import moment from 'moment';
 import { Content } from 'antd/es/layout/layout';
 import { PlusOutlined } from '@ant-design/icons';
+import { connect } from 'react-redux';
 import TodoList from './components/TodoList/TodoList';
 import TodoListItemPopup from './components/TodoListItemPopup/TodoListItemPopup';
+import { addTodoItem, deleteTodoItem, editTodoItem } from './store/todosActions';
 
-const todoData = [
-    {
-        id: uuidv4(),
-        content: 'test content',
-        date: moment().format('MMMM Do YYYY, hh:mm:ss')
-    },
-    {
-        id: uuidv4(),
-        content: 'test content2',
-        date: moment().format('MMMM Do YYYY, hh:mm:ss')
-    }
-];
-
-const App = () => {
-    const [todoListData, setTodoListData] = useState(todoData);
-    const [showListItemPopup, setShowListItemPopup] = useState(false);
+const App = ({ todoData = [], addItem, deleteItem, editItem }: Props) => {
+    const [showItemPopup, setShowItemPopup] = useState(false);
     const [changingListItem, setChangingListItem] = useState<{ id?: string; content?: string }>({});
 
-    const addTodoItem = (content: string, edit = false) => {
+    const addTodoItemHandler = (content: string, edit = false) => {
         if (!edit) {
-            setTodoListData([
-                ...todoListData,
-                { id: uuidv4(), content, date: moment().format('MMMM Do YYYY, hh:mm:ss') }
-            ]);
+            addItem(content);
         } else {
-            setTodoListData(
-                todoListData.map(item =>
-                    item.id === changingListItem.id
-                        ? { ...item, content, date: moment().format('MMMM Do YYYY, hh:mm:ss') }
-                        : item
-                )
-            );
+            editItem(changingListItem.id || '', content);
             setChangingListItem({});
         }
     };
 
-    const deleteTodoItem = (id: string) =>
-        setTodoListData(todoListData.filter(item => item.id !== id));
+    const deleteTodoItemHandler = (id: string) => deleteItem(id);
 
-    const editTodoItem = (item: object) => {
+    const startEditTodoItem = (item: object) => {
         setChangingListItem(item);
-        setShowListItemPopup(true);
+        setShowItemPopup(true);
     };
 
     return (
         <Layout className="app">
             <Content className="app-content">
                 <TodoList
-                    data={todoListData}
-                    onDeleteItem={deleteTodoItem}
-                    onEditItem={editTodoItem}
+                    data={todoData}
+                    onDeleteItem={deleteTodoItemHandler}
+                    onEditItem={startEditTodoItem}
                 />
                 <TodoListItemPopup
-                    onAdd={addTodoItem}
+                    onAdd={addTodoItemHandler}
                     onCancel={() => {
-                        setShowListItemPopup(false);
+                        setShowItemPopup(false);
                         setChangingListItem({});
                     }}
-                    show={showListItemPopup}
+                    show={showItemPopup}
                     defaultContent={changingListItem.content}
                 />
                 <FloatButton
                     className="app-content-add-button"
-                    onClick={() => setShowListItemPopup(true)}
+                    onClick={() => setShowItemPopup(true)}
                     icon={<PlusOutlined />}
                 />
             </Content>
@@ -79,4 +55,21 @@ const App = () => {
     );
 };
 
-export default App;
+interface Props {
+    todoData?: Array<object>;
+    addItem: (content: string) => void;
+    deleteItem: (id: string) => void;
+    editItem: (id: string, content: string) => void;
+}
+
+const mapStateToProps = (state: { todos: Array<object> }) => ({
+    todoData: state.todos
+});
+
+const mapDispatchToProps = {
+    addItem: addTodoItem,
+    deleteItem: deleteTodoItem,
+    editItem: editTodoItem
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

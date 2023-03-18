@@ -34,7 +34,7 @@ const TodoListItemPopup = ({ show, onAdd, onCancel, defaultContent }: Props) => 
                 value={content}
                 onChange={e => setContent(e.target.value)}
                 placeholder="Введите текст..."
-                autoSize={{ minRows: 3, maxRows: 5 }}
+                autoSize={{ minRows: 3, maxRows: 6 }}
             />
         </Modal>
     );
