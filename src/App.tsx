@@ -32,10 +32,14 @@ const App = () => {
         ]);
     };
 
+    const deleteTodoItem = (id: string) => {
+        setTodoListData(TodoListData.filter(item => item.id !== id));
+    };
+
     return (
         <Layout className="app">
             <Content className="app-content">
-                <TodoList data={TodoListData} />
+                <TodoList data={TodoListData} onDeleteItem={deleteTodoItem} />
                 <TodoListItemPopup
                     onAdd={addTodoItem}
                     onCancel={() => setAddingListItem(false)}
