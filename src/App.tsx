@@ -8,7 +8,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import TodoList from './components/TodoList/TodoList';
 import TodoListItemPopup from './components/TodoListItemPopup/TodoListItemPopup';
 
-const TodoData = [
+const todoData = [
     {
         id: uuidv4(),
         content: 'test content',
@@ -22,32 +22,56 @@ const TodoData = [
 ];
 
 const App = () => {
-    const [TodoListData, setTodoListData] = useState(TodoData);
-    const [addingListItem, setAddingListItem] = useState(false);
+    const [todoListData, setTodoListData] = useState(todoData);
+    const [showListItemPopup, setShowListItemPopup] = useState(false);
+    const [changingListItem, setChangingListItem] = useState<{ id?: string; content?: string }>({});
 
-    const addTodoItem = (content: string) => {
-        setTodoListData([
-            ...TodoListData,
-            { id: uuidv4(), content, date: moment().format('MMMM Do YYYY, hh:mm:ss') }
-        ]);
+    const addTodoItem = (content: string, edit = false) => {
+        if (!edit) {
+            setTodoListData([
+                ...todoListData,
+                { id: uuidv4(), content, date: moment().format('MMMM Do YYYY, hh:mm:ss') }
+            ]);
+        } else {
+            setTodoListData(
+                todoListData.map(item =>
+                    item.id === changingListItem.id
+                        ? { ...item, content, date: moment().format('MMMM Do YYYY, hh:mm:ss') }
+                        : item
+                )
+            );
+            setChangingListItem({});
+        }
     };
 
-    const deleteTodoItem = (id: string) => {
-        setTodoListData(TodoListData.filter(item => item.id !== id));
+    const deleteTodoItem = (id: string) =>
+        setTodoListData(todoListData.filter(item => item.id !== id));
+
+    const editTodoItem = (item: object) => {
+        setChangingListItem(item);
+        setShowListItemPopup(true);
     };
 
     return (
         <Layout className="app">
             <Content className="app-content">
-                <TodoList data={TodoListData} onDeleteItem={deleteTodoItem} />
+                <TodoList
+                    data={todoListData}
+                    onDeleteItem={deleteTodoItem}
+                    onEditItem={editTodoItem}
+                />
                 <TodoListItemPopup
                     onAdd={addTodoItem}
-                    onCancel={() => setAddingListItem(false)}
-                    show={addingListItem}
+                    onCancel={() => {
+                        setShowListItemPopup(false);
+                        setChangingListItem({});
+                    }}
+                    show={showListItemPopup}
+                    defaultContent={changingListItem.content}
                 />
                 <FloatButton
                     className="app-content-add-button"
-                    onClick={() => setAddingListItem(true)}
+                    onClick={() => setShowListItemPopup(true)}
                     icon={<PlusOutlined />}
                 />
             </Content>

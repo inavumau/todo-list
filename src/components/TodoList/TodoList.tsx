@@ -3,7 +3,7 @@ import './TodoList.css';
 import { List } from 'antd';
 import TodoListItem from '../TodoListItem/TodoListItem';
 
-const TodoList = ({ data, onDeleteItem }: Props) => (
+const TodoList = ({ data, onDeleteItem, onEditItem }: Props) => (
     <List
         grid={{
             gutter: 16,
@@ -15,13 +15,16 @@ const TodoList = ({ data, onDeleteItem }: Props) => (
             xxl: 6
         }}
         dataSource={data}
-        renderItem={item => <TodoListItem itemData={item} onDelete={onDeleteItem} />}
+        renderItem={item => (
+            <TodoListItem itemData={item} onDelete={onDeleteItem} onEdit={onEditItem} />
+        )}
     />
 );
 
 interface Props {
     data: Array<object>;
     onDeleteItem: (id: string) => void;
+    onEditItem: (item: object) => void;
 }
 
 export default TodoList;
