@@ -1,11 +1,15 @@
 import React from 'react';
-import './TodoListItem.css';
 import { Card, List } from 'antd';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import styled from 'styled-components';
+
+const StyledCard = styled(Card)`
+    word-break: break-all;
+`;
 
 const TodoListItem = ({ itemData, onDelete, onEdit }: Props) => (
     <List.Item>
-        <Card
+        <StyledCard
             className="card-content"
             bodyStyle={{ maxHeight: '200px', overflowY: 'auto' }}
             title={itemData.date}
@@ -15,7 +19,7 @@ const TodoListItem = ({ itemData, onDelete, onEdit }: Props) => (
             ]}
         >
             {itemData.content}
-        </Card>
+        </StyledCard>
     </List.Item>
 );
 

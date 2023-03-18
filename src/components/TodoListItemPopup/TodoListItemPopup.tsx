@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import './TodoListItemPopup.css';
 import { Modal } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 

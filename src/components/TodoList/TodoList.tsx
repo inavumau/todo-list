@@ -1,5 +1,4 @@
 import React from 'react';
-import './TodoList.css';
 import { List } from 'antd';
 import TodoListItem from '../TodoListItem/TodoListItem';
 
